@@ -13,6 +13,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    @app.errorhandler(404)
+    def not_found(e):
+        return {"success": False, "message": "Not found"}, 404
+
+    @app.errorhandler(500)
+    def server_error(e):
+        return {"success": False, "message": "Server error"}, 500
+
     db.init_app(app)
     jwt.init_app(app)
 
