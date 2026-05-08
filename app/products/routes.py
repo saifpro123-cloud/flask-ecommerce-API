@@ -49,7 +49,7 @@ def get_products():
     }
 
 
-@products.route("/product<int:product_id>", methods=["GET"])
+@products.route("/product/<int:product_id>", methods=["GET"])
 def get_product(product_id):
     product = Product.query.get(product_id)
 
@@ -61,7 +61,7 @@ def get_product(product_id):
         "data": ProductSchema().dump(product)
     }
 
-@products.route("/product<int:product_id>", methods=["PUT"])
+@products.route("/product/<int:product_id>", methods=["PUT"])
 @jwt_required()
 def update_product(product_id):
     user = User.query.get(get_jwt_identity())
@@ -91,7 +91,7 @@ def update_product(product_id):
 
 
 
-@products.route("/product<int:product_id>", methods=["DELETE"])
+@products.route("/product/<int:product_id>", methods=["DELETE"])
 @jwt_required()
 def delete_product(product_id):
     user = User.query.get(get_jwt_identity())
