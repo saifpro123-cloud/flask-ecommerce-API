@@ -48,7 +48,7 @@ ecommerc_api/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/aifpro123-cloud/flask-ecommerc-/API.git
+git clone https://github.com/aifpro123-cloud/flask-ecommerc-API.git
 cd flask-ecommerc-API
 ```
 
@@ -114,7 +114,6 @@ Authorization: Bearer <your_token>
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
-| GET | `/health` | No | Health check |
 | POST | `/register` | No | Register user |
 | POST | `/login` | No | Login user |
 | GET | `/category` | No | List categories |
