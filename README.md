@@ -1,261 +1,161 @@
-# 🛒 Flask E-Commerce API
+# Flask E-Commerce API
 
-A clean and scalable RESTful API built with Flask for managing a full e-commerce system.  
-This project includes authentication, products, categories, cart management, and checkout functionality.
+RESTful e-commerce backend built with Flask, PostgreSQL, JWT authentication, and Marshmallow validation.
 
----
+## Features
 
-## ✨ Features
+- JWT authentication (register / login)
+- User roles (admin for product & category management)
+- Products & categories CRUD
+- Shopping cart with stock checks
+- Checkout with order history
+- Consistent JSON responses
+- CORS enabled for frontend integration
+- Automated tests with pytest
 
-- 🔒 JWT Authentication
-- 👤 User Registration & Login
-- 📦 Product Management
-- 📁 Category Management
-- 🛒 Shopping Cart System
-- 🧾 Checkout System
-- ✅ Data Validation using Marshmallow
-- 🔑 Password Hashing
-- 🏗️ Modular Flask Architecture (Blueprints)
-- ⚡ RESTful API Design
+## Tech Stack
 
----
-
-## 🧰 Tech Stack
-
-- Python
-- Flask
+- Python 3.11+
+- Flask 3
 - Flask-SQLAlchemy
 - Flask-JWT-Extended
 - Marshmallow
 - PostgreSQL
-- Git & GitHub
+- pytest
 
----
+## Project Structure
 
-## 📁 Project Structure
-
-```bash
-app/
-├── users/
-│   ├── models.py
-│   ├── routes.py
-│   └── schema.py
-├── products/
-│   ├── models.py
-│   ├── routes.py
-│   └── schema.py
-├── categories/
-│   ├── models.py
-│   ├── routes.py
-│   └── schema.py
-├── cart/
-│   ├── models.py
-│   ├── routes.py
-│   └── schema.py
-├── orders/
-│   ├── models.py
-│   ├── routes.py
-│   └── schema.py
-├── config.py
-├── extensions.py
-└── __init__.py
+```text
+ecommerc_api/
+├── app/
+│   ├── users/
+│   ├── products/
+│   ├── categories/
+│   ├── cart/
+│   ├── orders/
+│   ├── config.py
+│   ├── extensions.py
+│   ├── utils.py
+│   └── __init__.py
+├── tests/
+├── run.py
+├── requirements.txt
+└── .env.example
 ```
 
----
+## Installation
 
-## ⚡ Installation
-
-### 1. Clone The Repository
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/saifpro123-cloud/flask-ecommerce-API.git
-cd flask-ecommerce-API
+git clone https://github.com/aifpro123-cloud/flask-ecommerc-/API.git
+cd flask-ecommerc-API
 ```
 
-### 2. Create Virtual Environment
+### 2. Create virtual environment
 
-#### Windows
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-#### Linux / macOS
 ```bash
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate   # Windows: venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Environment Variables
-
-Create a `.env` file:
-
-```env
-DATABASE_URL=your_database_url
-SECRET_KEY=your_secret_key
-DEBUG=True
-JWT_SECRET_KEY=your_jwt_secret
-```
-
-### 5. Run The Application
+### 4. Environment variables
 
 ```bash
-python app.py
+cp .env.example .env
 ```
 
----
+Edit `.env`:
 
-## 🔐 Authentication
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_db
+SECRET_KEY=your-secret-key
+JWT_SECRET_KEY=your-jwt-secret-key
+DEBUG=True
+```
 
-Protected routes require a JWT token in the header:
+### 5. Database note (existing projects)
+
+If you previously used the old cart table name `card_items`, drop it or reset your database before running again. The correct table name is now `cart_items`.
+
+### 6. Create an admin user
+
+Register a user via API, then set `is_admin = true` in the database for that user (or use your DB client).
+
+### 7. Run the application
+
+```bash
+python run.py
+```
+
+API runs at `http://127.0.0.1:5000`
+
+### 8. Run tests
+
+```bash
+pytest -v
+```
+
+## Authentication
+
+Protected routes require:
 
 ```http
 Authorization: Bearer <your_token>
 ```
 
----
+## API Endpoints
 
-## 🚀 API Endpoints
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/health` | No | Health check |
+| POST | `/register` | No | Register user |
+| POST | `/login` | No | Login user |
+| GET | `/category` | No | List categories |
+| POST | `/category` | Admin | Create category |
+| GET | `/product` | No | List products |
+| GET | `/product/<id>` | No | Get product |
+| POST | `/product` | Admin | Create product |
+| PUT | `/product/<id>` | Admin | Update product (partial) |
+| DELETE | `/product/<id>` | Admin | Delete product |
+| GET | `/cart` | User | Get cart |
+| POST | `/cart` | User | Add to cart |
+| DELETE | `/cart/<item_id>` | User | Remove cart item |
+| POST | `/checkout` | User | Checkout |
+| GET | `/orders` | User | List user orders |
 
-### 👤 Authentication
+## Example Responses
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/register` | Register new user |
-| POST | `/login` | Login user |
-
----
-
-### 📦 Products
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/product` | Get all products |
-| GET | `/product/<int:product_id>` | Get single product |
-| POST | `/product` | Create product |
-| PUT | `/product/<int:product_id>` | Update product |
-| DELETE | `/product/<int:product_id>` | Delete product |
-
----
-
-### 📁 Categories
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/category` | Get all categories |
-| POST | `/category` | Create category |
-
----
-
-### 🛒 Cart
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/cart` | Get cart items |
-| POST | `/cart` | Add item to cart |
-| DELETE | `/cart/<int:item_id>` | Remove item from cart |
-
----
-
-### 🧾 Orders
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/checkout` | Checkout order |
-| GET | `/orders` | Get user orders |
-
----
-
-## 📋 Example Requests
-
-### Register
-
-```json
-{
-  "name": "Saif",
-  "email": "saif@example.com",
-  "password": "123456"
-}
-```
-
-### Login
-
-```json
-{
-  "email": "saif@example.com",
-  "password": "123456"
-}
-```
-
-### Create Product
-
-```json
-{
-  "name": "iPhone 15",
-  "price": 1200,
-  "stock": 5,
-  "category_id": 1
-}
-```
-
-### Add To Cart
-
-```json
-{
-  "product_id": 1,
-  "quantity": 2
-}
-```
-
----
-
-## ✅ Example Response
+**Success**
 
 ```json
 {
   "success": true,
-  "message": "Operation completed successfully"
+  "data": {}
 }
 ```
 
----
+**Validation error**
 
-## 🔥 Key Highlights
+```json
+{
+  "success": false,
+  "errors": {
+    "email": ["Not a valid email address."]
+  }
+}
+```
 
-- Clean modular structure
-- RESTful API architecture
-- Secure authentication system
-- Validation using Marshmallow
-- SQLAlchemy ORM integration
-- Scalable backend design
+## Author
 
----
+**Saif Elsayed**
 
-## 🚀 Future Improvements
+## License
 
-- Pagination for products
-- Product filtering & search
-- Swagger API documentation
-- Docker support
-- Unit testing
-- Payment gateway integration
-- Refresh tokens
-
----
-
-## 👨‍💻 Author
-
-**Saif Elsayed**  
-GitHub: [https://github.com/saifpro123-cloud](https://github.com/saifpro123-cloud)
-
----
-
-## ⭐ Support
-
-If you like this project, give it a ⭐ on GitHub!
+MIT
